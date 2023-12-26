@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../global.css';
-	import { revealedCells, bombsLeft, isOver } from '../stores';
+	import { revealedCells, bombsLeft, isOver, isWon } from '../stores';
 	import { CellCoordinates } from '../interfaces/cell';
 
 	export let bombsNearby: number;
@@ -20,27 +20,26 @@
 			bombsLeft.update((prev) => prev - 1);
 		}
 		isFlagged = !isFlagged;
-		if (isFlagged && $bombsLeft === 0) {
-			checkIfWon();
-		}
 	};
 
 	const handleLeftClick = () => {
-		if (isFlagged) return;
 		isRevealed = true;
 		if ($revealedCells === 0) {
 			generateCellsStats(coordinates);
 		} else {
 			if (isBombed) {
 				handleGameLost();
-			} else if (bombsNearby === 0) {
-				revealCellsNearby(coordinates);
+			} else {
+				checkIfWon();
+				if (!isWon && bombsNearby === 0) {
+					revealCellsNearby(coordinates);
+				}
 			}
 		}
 	};
 	const handleCellClick = (e: MouseEvent) => {
-		if ($isOver) return;
-		if (e.button === 0) {
+		if ($isOver || $isWon) return;
+		if (e.button === 0 && !isFlagged) {
 			handleLeftClick();
 		} else if (e.button === 2) {
 			handleRightClick();

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { CellCoordinates } from '../interfaces/cell';
-	import { bombsLeft, isOver } from '../stores';
+	import { bombsLeft, isOver, isWon } from '../stores';
 	import Cell from './cell.svelte';
 	window.addEventListener('contextmenu', function (e) {
 		e.preventDefault();
 	});
-	const isBombed: boolean = true;
+	const isBombed: boolean = false;
 	const coordinates: CellCoordinates = { x: 0, y: 0 };
 	const isRevealed = false;
 	const generateCellsStats = (cellCoordinates: CellCoordinates) => {
@@ -28,6 +28,7 @@
 	<!-- this is where the cells go -->
 	<p>{`bombs left: ${$bombsLeft}`}</p>
 	<p>{`isOver: ${$isOver}`}</p>
+	<p>{`isWon: ${$isWon}`}</p>
 	<Cell
 		bombsNearby={0}
 		{generateCellsStats}
